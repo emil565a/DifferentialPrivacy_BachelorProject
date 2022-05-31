@@ -1,0 +1,12 @@
+#binarytree
+numpy
+pandas
+math
+random
+mathplotlib.pyplot
+opencv-python
+datetime
+black
+scipy.stats
+cv2
+setuptools>=60.8.2
