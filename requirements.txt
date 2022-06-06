@@ -1,12 +1,5 @@
-#binarytree
-numpy
-pandas
-math
-random
-mathplotlib.pyplot
-opencv-python
-datetime
-black
-scipy.stats
-cv2
-setuptools>=60.8.2
+matplotlib==3.3.4
+numpy==1.20.1
+pandas==1.2.4
+psycopg2==2.9.3
+scipy==1.6.2
