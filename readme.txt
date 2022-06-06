@@ -2,8 +2,6 @@
     The Project.ipynb file contains all the code developed in relation to this project. 
     
 
-
-
 2. Requirements
     The project have been developed in Python 3.9.10 (64-bit), using the Jupyter Lab Notebook functionality.
     (https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/what_is_jupyter.html#)
@@ -22,6 +20,7 @@
         
     2.3 Jupyter Notebook 
         Method 1: "pip install notebook"
+
 
 
 3. Opening and runing the code 
@@ -43,10 +42,6 @@
                     2.1. cd to the project folder 
                     2.2. open via: "jupyter notebook Project.ipynb"
             3.2.2: Run the code either cell by cell, or all at once 
-
-
-
-
     
 
 
