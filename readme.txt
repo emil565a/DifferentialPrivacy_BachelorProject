@@ -1,6 +1,9 @@
 1. Introduction 
     The Project.ipynb file contains all the code developed in relation to this project. 
-    
+    You can either view the execution of all the code by opening the HTML file (Project.html) in a browser,
+    or you execute the code yourself, by executing each cell in the Project.ipynb file 
+    To execute the code itself, follow the instructions beneath. 
+
 
 2. Requirements
     The project have been developed in Python 3.9.10 (64-bit), using the Jupyter Lab Notebook functionality.
@@ -36,7 +39,10 @@
                     1.2. Open via: "code ."
                     1.3  Open the Project.ipynb 
                     1.4  Select Python 3.9.10 Kernel
-                    1.5 Press Run All 
+                    1.5  Press Run All
+                    (Follow instructions in https://code.visualstudio.com/docs/datascience/jupyter-notebooks
+                     if the above does not work).
+                          
             
                 2. Jupyter NoteBook:
                     2.1. cd to the project folder 
