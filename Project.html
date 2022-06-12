@@ -14275,22 +14275,23 @@ a.anchor-link {
 <span class="c1">#from random import seed</span>
 <span class="c1">#from random import randint</span>
 
+<span class="c1"># from psycopg2 import sql</span>
+<span class="c1"># from sql.db_conn import conn</span>
+<span class="c1"># import psycopg2 as pg</span>
+<span class="c1"># db = &quot;dbname=&#39;taxi2016&#39; user=&#39;postgres&#39; host=&#39;localhost&#39; password = &#39;postgres&#39;&quot; </span>
+<span class="c1">#import pandas as pd</span>
+<span class="c1">#import copy</span>
+
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">laplace</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
 <span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="nn">rn</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 
 <span class="c1">#import pg</span>
-<span class="kn">from</span> <span class="nn">psycopg2</span> <span class="kn">import</span> <span class="n">sql</span>
-<span class="kn">from</span> <span class="nn">sql.db_conn</span> <span class="kn">import</span> <span class="n">conn</span>
-<span class="kn">import</span> <span class="nn">psycopg2</span> <span class="k">as</span> <span class="nn">pg</span>
-<span class="n">db</span> <span class="o">=</span> <span class="s2">&quot;dbname=&#39;taxi2016&#39; user=&#39;postgres&#39; host=&#39;localhost&#39; password = &#39;postgres&#39;&quot;</span>
 </pre></div>
 
      </div>
@@ -14329,7 +14330,8 @@ Part 2.
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Defining-datastructure-and-creating-data">Defining datastructure and creating data<a class="anchor-link" href="#Defining-datastructure-and-creating-data">&#182;</a></h2>
+<h2 id="Defining-datastructure-and-creating-data">Defining datastructure and creating data<a class="anchor-link" href="#Defining-datastructure-and-creating-data">&#182;</a></h2><p>The following cell defines the binary data structure functinonality.</p>
+
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
@@ -14417,30 +14419,6 @@ Part 2.
     <span class="k">else</span><span class="p">:</span>  <span class="c1">#Reached tail </span>
         <span class="n">nodesArr</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">nodesArr</span>
-
-<span class="k">def</span> <span class="nf">dataFetch</span><span class="p">(</span><span class="n">rows</span><span class="p">):</span>
-    <span class="n">conn</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
-    <span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
-    <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    select concat(TO_CHAR(jan_day, &#39;fm00&#39;),TO_CHAR(day_hour , &#39;fm00&#39;),TO_CHAR(hour_min , &#39;fm00&#39;))::integer as min, count(*) </span>
-<span class="s2">    from taxi_pickup_201601</span>
-<span class="s2">    group by min  -- 44062 rows</span>
-<span class="s2">    limit </span><span class="si">{}</span><span class="s2"></span>
-<span class="s2">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rows</span><span class="p">))</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
-        <span class="n">timestampData</span><span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-            <span class="n">timeTuple</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">timestampData</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timeTuple</span><span class="p">)</span>
-        <span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">timestampData</span>
-
-    <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">pg</span><span class="o">.</span><span class="n">Error</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error while fetching pick up counts&quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
-        <span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
 </pre></div>
 
      </div>
@@ -14451,7 +14429,9 @@ Part 2.
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Counter-Algorithm-and-General-functionality">Counter Algorithm and General functionality<a class="anchor-link" href="#Counter-Algorithm-and-General-functionality">&#182;</a></h2>
+<h2 id="Counter-Algorithm-and-General-functionality">Counter Algorithm and General functionality<a class="anchor-link" href="#Counter-Algorithm-and-General-functionality">&#182;</a></h2><p>In the following cell we define the differential privacy mechanism and general functionality for publishing counts at different times.</p>
+<p>The first two functions in combination anonymises tha data (addLapNoise and counterAlgorighm), while the next three (getIntervalAndValue, estimator, estimatorST) is used to retrieve the datapoints after anynomisation. The last two functions (printBinaryTree and treePrinter) are simply used for printing the binary trees.</p>
+
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
@@ -14643,7 +14623,7 @@ Part 2.
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Testing-Counter-Algorithm-and-Data-Retrieval-Functionality">Testing Counter Algorithm and Data Retrieval Functionality<a class="anchor-link" href="#Testing-Counter-Algorithm-and-Data-Retrieval-Functionality">&#182;</a></h2><p>In the following cell we create data and run the counter algorithm. We then test retrieve</p>
+<h2 id="Testing-Counter-Algorithm-and-Data-Retrieval-Functionality">Testing Counter Algorithm and Data Retrieval Functionality<a class="anchor-link" href="#Testing-Counter-Algorithm-and-Data-Retrieval-Functionality">&#182;</a></h2><p>In the following cell we create data and run the counter algorithm. We then test retrieve the anonymised data points.</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -14675,6 +14655,7 @@ Part 2.
     <span class="n">noisyRootHigh</span> <span class="o">=</span> <span class="n">noisyTreeHigh</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">noisyRootLow</span>  <span class="o">=</span> <span class="n">noisyTreeLow</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">#### Printing Trees ####&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Original Tree&quot;</span><span class="p">)</span>
     <span class="n">treePrinter</span><span class="p">(</span><span class="n">originalTree</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Noisy Tree Low Eps&quot;</span><span class="p">)</span>
@@ -14682,6 +14663,8 @@ Part 2.
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Noisy Tree High Epsilon &quot;</span><span class="p">)</span>
     <span class="n">treePrinter</span><span class="p">(</span><span class="n">noisyTreeHigh</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
 
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">##### Estimation of counts at different time Intervals ####&quot;</span><span class="p">)</span>
     <span class="c1">#Estimate Counts at time T</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate at Time T:&quot;</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
     <span class="n">OGEst</span>        <span class="o">=</span> <span class="n">estimator</span><span class="p">(</span><span class="n">T</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">OGRoot</span><span class="p">)</span>
@@ -14719,94 +14702,102 @@ Part 2.
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Initial data:  [(0, 145), (1, 105), (2, 71), (3, 63)] 
+<pre>Initial data:  [(0, 135), (1, 53), (2, 80), (3, 127)] 
 
+
+
+
+#### Printing Trees ####
 Original Tree
-                                  ((0, 3), 384)
+                                  ((0, 3), 395)
 
 
-                          ((0, 1), 250)  ((2, 3), 134)
+                          ((0, 1), 188)  ((2, 3), 207)
 
 
-                  ((0, 0), 145)  ((1, 1), 105)  ((2, 2), 71)  ((3, 3), 63)
+                  ((0, 0), 135)  ((1, 1), 53)  ((2, 2), 80)  ((3, 3), 127)
 
 
 Noisy Tree Low Eps
-                                  ((0, 3), 387)
+                                  ((0, 3), 408)
 
 
-                          ((0, 1), 246)  ((2, 3), 133)
+                          ((0, 1), 191)  ((2, 3), 200)
 
 
-                  ((0, 0), 145)  ((1, 1), 102)  ((2, 2), 72)  ((3, 3), 76)
+                  ((0, 0), 112)  ((1, 1), 49)  ((2, 2), 62)  ((3, 3), 125)
 
 
 Noisy Tree High Epsilon 
-                                  ((0, 3), 384)
+                                  ((0, 3), 395)
 
 
-                          ((0, 1), 251)  ((2, 3), 135)
+                          ((0, 1), 188)  ((2, 3), 208)
 
 
-                  ((0, 0), 147)  ((1, 1), 105)  ((2, 2), 72)  ((3, 3), 64)
+                  ((0, 0), 136)  ((1, 1), 54)  ((2, 2), 79)  ((3, 3), 127)
 
 
+
+
+
+##### Estimation of counts at different time Intervals ####
 Estimate at Time T: 4
-OG  384
-NoisyHigh:  384
-noisyLow:  387 
+OG  395
+NoisyHigh:  395
+noisyLow:  408 
 
 
 Estimate at Intervals
 s, t =  0 0
-OG Estimate:  145
-High Noise Estimate:  147
-Low Noise Estimate:  145 
+OG Estimate:  135
+High Noise Estimate:  136
+Low Noise Estimate:  112 
 
 s, t =  0 1
-OG Estimate:  250
-High Noise Estimate:  251
-Low Noise Estimate:  246 
+OG Estimate:  188
+High Noise Estimate:  188
+Low Noise Estimate:  191 
 
 s, t =  0 2
-OG Estimate:  321
-High Noise Estimate:  323
-Low Noise Estimate:  318 
+OG Estimate:  268
+High Noise Estimate:  267
+Low Noise Estimate:  253 
 
 s, t =  0 3
-OG Estimate:  384
-High Noise Estimate:  384
-Low Noise Estimate:  387 
+OG Estimate:  395
+High Noise Estimate:  395
+Low Noise Estimate:  408 
 
 s, t =  1 1
-OG Estimate:  105
-High Noise Estimate:  104
-Low Noise Estimate:  101 
+OG Estimate:  53
+High Noise Estimate:  52
+Low Noise Estimate:  79 
 
 s, t =  1 2
-OG Estimate:  176
-High Noise Estimate:  176
-Low Noise Estimate:  173 
-
-s, t =  1 3
-OG Estimate:  239
-High Noise Estimate:  237
-Low Noise Estimate:  242 
-
-s, t =  2 2
-OG Estimate:  71
-High Noise Estimate:  72
-Low Noise Estimate:  72 
-
-s, t =  2 3
-OG Estimate:  134
-High Noise Estimate:  133
+OG Estimate:  133
+High Noise Estimate:  131
 Low Noise Estimate:  141 
 
+s, t =  1 3
+OG Estimate:  260
+High Noise Estimate:  259
+Low Noise Estimate:  296 
+
+s, t =  2 2
+OG Estimate:  80
+High Noise Estimate:  79
+Low Noise Estimate:  62 
+
+s, t =  2 3
+OG Estimate:  207
+High Noise Estimate:  207
+Low Noise Estimate:  217 
+
 s, t =  3 3
-OG Estimate:  63
-High Noise Estimate:  61
-Low Noise Estimate:  69 
+OG Estimate:  127
+High Noise Estimate:  128
+Low Noise Estimate:  155 
 
 </pre>
 </div>
@@ -14824,7 +14815,8 @@ Low Noise Estimate:  69
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="Plotting-Laplace-Noisy-at-different-epsilon-Values">Plotting Laplace Noisy at different epsilon Values<a class="anchor-link" href="#Plotting-Laplace-Noisy-at-different-epsilon-Values">&#182;</a></h4>
+<h4 id="Plotting-Laplace-Noisy-at-different-epsilon-Values">Plotting Laplace Noisy at different epsilon Values<a class="anchor-link" href="#Plotting-Laplace-Noisy-at-different-epsilon-Values">&#182;</a></h4><p>The following cells define the expected error and CDF intervals for specific values of epsilon.</p>
+
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
@@ -14865,8 +14857,7 @@ Low Noise Estimate:  69
     <span class="k">for</span> <span class="n">eps</span> <span class="ow">in</span> <span class="n">epsValues</span><span class="p">:</span> 
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Eps&quot;</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">inter</span> <span class="ow">in</span> <span class="n">intervals</span><span class="p">:</span> 
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Interval&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="o">-</span><span class="n">inter</span><span class="p">,</span> <span class="n">inter</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">expectedErrors</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">inter</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Interval&quot;</span><span class="p">,</span> <span class="s2">&quot;[&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="o">-</span><span class="n">inter</span><span class="p">,</span> <span class="n">inter</span><span class="p">,</span> <span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;Pr:&quot;</span><span class="p">,</span> <span class="n">expectedErrors</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">inter</span><span class="p">))</span>
 
 <span class="c1">#Plot noisy Functions </span>
 <span class="k">def</span> <span class="nf">plotNoise</span><span class="p">(</span><span class="n">epsValues</span><span class="p">,</span> <span class="n">treeSizes</span><span class="p">):</span> 
@@ -14913,6 +14904,7 @@ Low Noise Estimate:  69
 <span class="n">epsValues</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
 <span class="n">intervals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
 <span class="n">treeSizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="o">**</span><span class="mi">8</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Probability of drawing a value from a certain interval at different epsilon values&quot;</span><span class="p">)</span>
 <span class="n">CalculateCDFOnIntervals</span><span class="p">(</span><span class="n">epsValues</span><span class="p">,</span> <span class="n">treeSizes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
 <span class="n">plotNoise</span><span class="p">(</span><span class="n">epsValues</span><span class="p">,</span> <span class="n">treeSizes</span><span class="p">)</span>
 </pre></div>
@@ -14934,56 +14926,37 @@ Low Noise Estimate:  69
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>
+<pre>Probability of drawing a value from a certain interval at different epsilon values
+
 Eps 0.1
-Interval -1 1
-0.011049610706077628
-Interval -5 5
-0.05404053109323459
-Interval -10 10
-0.10516068318563021
-Interval -20 20
-0.19926259708319188
+Interval [ -1 1 ] : Pr: 0.011049610706077628
+Interval [ -5 5 ] : Pr: 0.05404053109323459
+Interval [ -10 10 ] : Pr: 0.10516068318563021
+Interval [ -20 20 ] : Pr: 0.19926259708319188
 
 Eps 0.5
-Interval -1 1
-0.05404053109323459
-Interval -5 5
-0.24253487160303355
-Interval -10 10
-0.4262465792625672
-Interval -20 20
-0.6708070121920944
+Interval [ -1 1 ] : Pr: 0.05404053109323459
+Interval [ -5 5 ] : Pr: 0.24253487160303355
+Interval [ -10 10 ] : Pr: 0.4262465792625672
+Interval [ -20 20 ] : Pr: 0.6708070121920944
 
 Eps 1
-Interval -1 1
-0.10516068318563021
-Interval -5 5
-0.4262465792625672
-Interval -10 10
-0.6708070121920944
-Interval -20 20
-0.8916319767781042
+Interval [ -1 1 ] : Pr: 0.10516068318563021
+Interval [ -5 5 ] : Pr: 0.4262465792625672
+Interval [ -10 10 ] : Pr: 0.6708070121920944
+Interval [ -20 20 ] : Pr: 0.8916319767781042
 
 Eps 2
-Interval -1 1
-0.19926259708319188
-Interval -5 5
-0.6708070121920944
-Interval -10 10
-0.8916319767781042
-Interval -20 20
-0.9882563715429786
+Interval [ -1 1 ] : Pr: 0.19926259708319188
+Interval [ -5 5 ] : Pr: 0.6708070121920944
+Interval [ -10 10 ] : Pr: 0.8916319767781042
+Interval [ -20 20 ] : Pr: 0.9882563715429786
 
 Eps 5
-Interval -1 1
-0.4262465792625672
-Interval -5 5
-0.9378234759778836
-Interval -10 10
-0.9961340798605272
-Interval -20 20
-0.9999850546614752
+Interval [ -1 1 ] : Pr: 0.4262465792625672
+Interval [ -5 5 ] : Pr: 0.9378234759778836
+Interval [ -10 10 ] : Pr: 0.9961340798605272
+Interval [ -20 20 ] : Pr: 0.9999850546614752
 </pre>
 </div>
 </div>
@@ -15140,7 +15113,8 @@ Interval -20 20
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Part-2:-Attack-Continual-Observation">Part 2: Attack Continual Observation<a class="anchor-link" href="#Part-2:-Attack-Continual-Observation">&#182;</a></h1>
+<h1 id="Part-2:-Attack-Continual-Observation">Part 2: Attack Continual Observation<a class="anchor-link" href="#Part-2:-Attack-Continual-Observation">&#182;</a></h1><p>In this second part of the project, we attack the implementation defined in part 1. The overall goal is to see how much noise is needed to achieve different levels of anonymisation.</p>
+
 </div>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
@@ -15251,7 +15225,7 @@ Interval -20 20
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="Probability-Calculation-of-Noisy-Vector">Probability Calculation of Noisy Vector<a class="anchor-link" href="#Probability-Calculation-of-Noisy-Vector">&#182;</a></h4>
+<h4 id="Probability-Calculation-of-Drawing-Noisy-Vector">Probability Calculation of Drawing Noisy Vector<a class="anchor-link" href="#Probability-Calculation-of-Drawing-Noisy-Vector">&#182;</a></h4>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
@@ -15496,12 +15470,13 @@ prepAttackFull() simulates one attack on the full tree and returns the posterior
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Testing">Testing<a class="anchor-link" href="#Testing">&#182;</a></h3>
+<h3 id="Testing/Performing-Attacks">Testing/Performing Attacks<a class="anchor-link" href="#Testing/Performing-Attacks">&#182;</a></h3>
 </div>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="Showcasing-Attacks">Showcasing Attacks<a class="anchor-link" href="#Showcasing-Attacks">&#182;</a></h4>
+<h4 id="Showcasing-Attacks">Showcasing Attacks<a class="anchor-link" href="#Showcasing-Attacks">&#182;</a></h4><p>The following cell performs several attack at different treesizes and epsilon values.</p>
+
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
@@ -15640,7 +15615,7 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Determining-average-number-of-successfull-attacks-for-different-epsilon-values-and-T">Determining average number of successfull attacks for different epsilon-values and T<a class="anchor-link" href="#Determining-average-number-of-successfull-attacks-for-different-epsilon-values-and-T">&#182;</a></h3>
+<h3 id="Determining-the-average-number-of-successfull-attacks-for-different-epsilon-values-and-T">Determining the average number of successfull attacks for different epsilon-values and T<a class="anchor-link" href="#Determining-the-average-number-of-successfull-attacks-for-different-epsilon-values-and-T">&#182;</a></h3>
 </div>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
@@ -15653,99 +15628,19 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">##########LEGACY#########</span>
-<span class="k">def</span> <span class="nf">TestLeavesOnly</span> <span class="p">(</span><span class="n">loopSize</span><span class="p">,</span> <span class="n">maxT</span><span class="p">):</span> 
-    <span class="n">bestGuess</span> <span class="o">=</span> <span class="mi">0</span> 
-    <span class="c1">#maxTreeSize = 2*maxT</span>
-    <span class="n">tSizeArrLow</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">tSizeArrHigh</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">maxT</span><span class="p">):</span>
-        <span class="n">epsArrLow</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">epsArrHigh</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">T</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">i</span>
-        <span class="n">eps</span> <span class="o">=</span> <span class="mf">0.1</span>
-        <span class="n">prGuessCorrect</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="p">(</span><span class="n">prGuessCorrect</span> <span class="o">&lt;</span> <span class="mf">0.60</span> <span class="ow">and</span> <span class="n">eps</span> <span class="o">&lt;</span> <span class="mi">150</span><span class="p">):</span> 
-            <span class="n">correctGuesses</span> <span class="o">=</span> <span class="mi">0</span> 
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">loopSize</span><span class="p">):</span> 
-                <span class="n">posteriors</span><span class="p">,</span> <span class="n">posteriorsFull</span> <span class="o">=</span> <span class="n">prepAttackLeaves</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
-                <span class="n">posteriorsT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">posteriors</span><span class="p">)</span>
-                
-                <span class="c1">#LEAVES ONLY</span>
-                <span class="n">winner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">posteriorsT</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">posteriorsT</span><span class="p">))</span>
-                <span class="n">pick</span> <span class="o">=</span> <span class="n">rn</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">winner</span><span class="p">)</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">pick</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-                    <span class="n">correctGuesses</span> <span class="o">=</span> <span class="n">correctGuesses</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="n">prGuessCorrect</span> <span class="o">=</span> <span class="n">correctGuesses</span><span class="o">/</span><span class="n">loopSize</span>
-            <span class="k">if</span> <span class="n">eps</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">epsArrLow</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">eps</span><span class="p">,</span> <span class="n">prGuessCorrect</span><span class="p">))</span>
-                <span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">eps</span><span class="o">+</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">epsArrHigh</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">eps</span><span class="p">,</span> <span class="n">prGuessCorrect</span><span class="p">))</span>
-                <span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">eps</span><span class="o">*</span><span class="mf">1.2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-                
-        <span class="n">tSizeArrLow</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epsArrLow</span><span class="p">)</span>
-        <span class="n">tSizeArrHigh</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epsArrHigh</span><span class="p">)</span>
-        
-    <span class="n">tSizeArrLow</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tSizeArrLow</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
-    <span class="n">tSizeArrHigh</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tSizeArrHigh</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
-    <span class="k">return</span>  <span class="n">tSizeArrLow</span><span class="p">,</span> <span class="n">tSizeArrHigh</span>
-
-<span class="k">def</span> <span class="nf">TestFullTree</span><span class="p">(</span><span class="n">loopSize</span><span class="p">,</span> <span class="n">maxTreeSize</span><span class="p">):</span> 
-    <span class="n">bestGuess</span> <span class="o">=</span> <span class="mi">0</span> 
-    <span class="n">tSizeArrLow</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">tSizeArrHigh</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxTreeSize</span><span class="p">):</span>
-        <span class="n">epsArrLow</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">epsArrHigh</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">T</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">i</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Prior: &quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">T</span><span class="p">)</span>
-        <span class="n">eps</span> <span class="o">=</span> <span class="mf">0.1</span>
-        <span class="n">prGuessCorrect</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="p">(</span><span class="n">prGuessCorrect</span> <span class="o">&lt;</span> <span class="mf">0.90</span> <span class="ow">and</span> <span class="n">eps</span> <span class="o">&lt;</span> <span class="mi">150</span><span class="p">):</span> 
-            <span class="n">correctGuesses</span> <span class="o">=</span> <span class="mi">0</span> 
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">loopSize</span><span class="p">):</span> 
-                <span class="n">posteriors</span><span class="p">,</span> <span class="n">posteriorsFull</span> <span class="o">=</span> <span class="n">prepAttackFull</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
-                <span class="n">posteriorsT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">posteriorsFull</span><span class="p">)</span>
-                <span class="n">winner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">posteriorsT</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">posteriorsT</span><span class="p">))</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">winner</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> 
-                <span class="k">if</span> <span class="n">winner</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">pick</span> <span class="o">=</span> <span class="n">rn</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">winner</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">pick</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-                        <span class="n">correctGuesses</span> <span class="o">=</span> <span class="n">correctGuesses</span> <span class="o">+</span> <span class="mi">1</span>
-
-            <span class="n">prGuessCorrect</span> <span class="o">=</span> <span class="n">correctGuesses</span><span class="o">/</span><span class="n">loopSize</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;t: &quot;</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="s2">&quot;eps &quot;</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="s2">&quot;PrBestGuess &quot;</span><span class="p">,</span> <span class="n">prGuessCorrect</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">eps</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
-                <span class="n">epsArrLow</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">eps</span><span class="p">,</span> <span class="n">prGuessCorrect</span><span class="p">))</span>
-                <span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">eps</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">epsArrHigh</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">eps</span><span class="p">,</span> <span class="n">prGuessCorrect</span><span class="p">))</span>
-                <span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">eps</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-
-        <span class="n">tSizeArrLow</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epsArrLow</span><span class="p">)</span>
-        <span class="n">tSizeArrHigh</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epsArrHigh</span><span class="p">)</span>
-    <span class="n">tSizeArrLow</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tSizeArrLow</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
-    <span class="n">tSizeArrHigh</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tSizeArrHigh</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">tSizeArrLow</span><span class="p">,</span> <span class="n">tSizeArrHigh</span>
-
-<span class="k">def</span> <span class="nf">plotBestGuess</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)):</span>
-        <span class="n">TArr</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> 
-        <span class="n">eps</span><span class="p">,</span> <span class="n">prop</span> <span class="o">=</span> <span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">TArr</span><span class="p">))</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;T=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">)))</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Epsilon-Value&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Average Max Probability&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-    <span class="k">return</span> <span class="mi">1</span>
-<span class="c1">##############################</span>
-
-<span class="c1">### NEW ###</span>
-
-<span class="c1">## Helper Function For simpleTest##</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## Helper Function For simpleTest##</span>
 <span class="k">def</span> <span class="nf">determineGuess</span><span class="p">(</span><span class="n">post</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    INPUT: </span>
+<span class="sd">        post: Array of posterios. Obtaining by performing an attack </span>
+<span class="sd">        </span>
+<span class="sd">    OUTPUT: True if guesses correctly, false otherwise</span>
+<span class="sd">        </span>
+<span class="sd">    Description:</span>
+<span class="sd">        The data have been setup such that the missing event is always in last leaf (timeinterval). </span>
+<span class="sd">        Therefore we check if maximum index of the posterior is the last index. </span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">posteriorsT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
     <span class="n">winner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">posteriorsT</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">posteriorsT</span><span class="p">))</span>
     <span class="n">winner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">winner</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> 
@@ -15757,6 +15652,16 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
         <span class="k">return</span> <span class="kc">False</span>
 
 <span class="k">def</span> <span class="nf">simpleTest</span><span class="p">(</span><span class="n">loopSize</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">minEps</span><span class="p">,</span> <span class="n">maxEps</span><span class="p">,</span> <span class="n">epsIncrease</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    INPUT: </span>
+<span class="sd">        loopSize: Amount of attacks we perform </span>
+<span class="sd">        T: Amount of leaves in the tree (Time intervals)</span>
+<span class="sd">        minEps: Starting value for epsilon</span>
+<span class="sd">        maxEps: Stopping condition </span>
+<span class="sd">        epsIncrease: How much epsilon increase at every iteration </span>
+<span class="sd">        </span>
+<span class="sd">    OUTPUT: Posteriors for the attacks on leaves and full tree. Average normalized probabilities. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">eps</span> <span class="o">=</span> <span class="n">minEps</span>
     <span class="n">leafsOnly</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">fullTree</span> <span class="o">=</span> <span class="p">[]</span>
@@ -15785,6 +15690,16 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
 
 <span class="c1">#Plotting Function </span>
 <span class="k">def</span> <span class="nf">plotBestGuessSimple</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">pltFig</span><span class="p">):</span> 
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    INPUT: </span>
+<span class="sd">        arr: array containing posteriers for a treeSize and EpsValue </span>
+<span class="sd">        T: Number of leaves in tree</span>
+<span class="sd">        title: Not used</span>
+<span class="sd">        pltFig: A plt.figure </span>
+<span class="sd">        </span>
+<span class="sd">    OUTPUT: </span>
+<span class="sd">        A plt figure. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">eps</span><span class="p">,</span> <span class="n">prop</span> <span class="o">=</span> <span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">arr</span><span class="p">))</span>
     <span class="n">pltFig</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;T=&#39;</span><span class="p">,</span> <span class="n">T</span><span class="p">))</span>
     <span class="n">pltFig</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
@@ -15799,7 +15714,7 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="Plotting">Plotting<a class="anchor-link" href="#Plotting">&#182;</a></h4>
+<h4 id="Plotting-the-number-of-successfull-attacks-at-different-T-sizes-and-Epsilon-Values">Plotting the number of successfull attacks at different T-sizes and Epsilon Values<a class="anchor-link" href="#Plotting-the-number-of-successfull-attacks-at-different-T-sizes-and-Epsilon-Values">&#182;</a></h4>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
@@ -15836,6 +15751,7 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
             <span class="n">plotBestGuessSimple</span><span class="p">(</span><span class="n">arrFull</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;Full Tree&quot;</span><span class="p">,</span> <span class="n">subplot2</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The following graphs showcase the likelihood of successfull attacks. An attack can be described as successfull when it locates the time t, in which a count is missing&quot;</span><span class="p">)</span>
 <span class="n">runner</span><span class="p">()</span>
 </pre></div>
 
@@ -15958,7 +15874,9 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Determining-the-average-distance-to-the-correct-answer">Determining the average distance to the correct answer<a class="anchor-link" href="#Determining-the-average-distance-to-the-correct-answer">&#182;</a></h3>
+<h3 id="Determining-the-average-distance-to-the-correct-answer">Determining the average distance to the correct answer<a class="anchor-link" href="#Determining-the-average-distance-to-the-correct-answer">&#182;</a></h3><p>In the following cells we will implement functionality that calculates the amount of shared edges between a guess and the correct answer.
+The guess is defined as the maximum value in the posterior array from the attack.</p>
+
 </div>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
@@ -15972,6 +15890,16 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">sharedEdges</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">):</span> 
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    INPUT: </span>
+<span class="sd">        c: Index of correct answer </span>
+<span class="sd">        g: Index of guess</span>
+<span class="sd">        low: Min index of current tree</span>
+<span class="sd">        high: Max index of current tree</span>
+<span class="sd">        </span>
+<span class="sd">    OUTPUT: </span>
+<span class="sd">        Number of shared edges between guess and correct answer.  </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">middleValue</span> <span class="o">=</span> <span class="p">(</span><span class="n">low</span><span class="o">+</span><span class="n">high</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="n">g</span><span class="p">):</span> 
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">high</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> 
@@ -15987,14 +15915,23 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
     <span class="k">else</span><span class="p">:</span> 
         <span class="k">return</span> <span class="mi">0</span>
        
-<span class="k">def</span> <span class="nf">diffToCorrect</span><span class="p">(</span><span class="n">loopSize</span><span class="p">,</span> <span class="n">epsValues</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-    <span class="c1">#print(&quot;Naive Correct Levels:&quot;, (t-1)/t, &quot;Percent:&quot;, (t-1)/t/math.log2(t))</span>
+<span class="k">def</span> <span class="nf">diffToCorrect</span><span class="p">(</span><span class="n">loopSize</span><span class="p">,</span> <span class="n">epsValues</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    INPUT: </span>
+<span class="sd">        loopSize: Number of attacks we perform for each eps and t size</span>
+<span class="sd">        epsValues: Array containing different epsilonValues</span>
+<span class="sd">        T: A size of one tree. </span>
+<span class="sd">            </span>
+<span class="sd">    OUTPUT: An array containing the average distance at different epsilon values. </span>
+<span class="sd">         </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
     <span class="n">returnArr</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">eps</span> <span class="ow">in</span> <span class="n">epsValues</span><span class="p">:</span> 
         <span class="n">averageCorrectSteps</span> <span class="o">=</span> <span class="mi">0</span> 
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">loopSize</span><span class="p">):</span>
             <span class="c1">#Calculating Posteriors </span>
-            <span class="n">posteriorsFull</span> <span class="o">=</span> <span class="n">prepAttackFull</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="n">printBool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">posteriorsFull</span> <span class="o">=</span> <span class="n">prepAttackFull</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="n">printBool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             
             <span class="c1">#Flipping Array to put missing Count at index 0 </span>
             <span class="n">posteriorsT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">posteriorsFull</span><span class="p">)</span>
@@ -16006,11 +15943,10 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
             <span class="c1">#Checking whether more than one value share maximum </span>
             <span class="k">if</span> <span class="n">winner</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">winner</span> <span class="o">=</span> <span class="n">rn</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">winner</span><span class="p">)</span>
-            <span class="n">averageCorrectSteps</span> <span class="o">=</span> <span class="n">averageCorrectSteps</span><span class="o">+</span><span class="n">sharedEdges</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">winner</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">averageCorrectSteps</span> <span class="o">=</span> <span class="n">averageCorrectSteps</span><span class="o">+</span><span class="n">sharedEdges</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">winner</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">T</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
             
         <span class="n">averageCorrectSteps</span> <span class="o">=</span> <span class="n">averageCorrectSteps</span><span class="o">/</span><span class="n">loopSize</span>
         <span class="n">nodesLeft</span> <span class="o">=</span> <span class="n">t</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">averageCorrectSteps</span><span class="p">)</span>
-        <span class="c1">#print(&quot;eps: &quot;, eps,  &quot;CP&quot;, round(AverageDistFromCorrect,2))</span>
         <span class="n">returnArr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">averageCorrectSteps</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">returnArr</span>
 </pre></div>
@@ -16210,6 +16146,12 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
 
 </div>
 
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>The following cell is a simple test on an attack on a tree with 256 leaves. It is used to compare with the results above.</p>
+
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
@@ -16242,6 +16184,8 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
         <span class="n">arrLeafs</span><span class="p">,</span> <span class="n">arrFull</span> <span class="o">=</span> <span class="n">simpleTest</span><span class="p">(</span><span class="n">loopSize</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">epsVal</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">epsVal</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">epsVal</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
         <span class="n">plotBestGuessSimple</span><span class="p">(</span><span class="n">arrLeafs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;Leafs Only&quot;</span><span class="p">,</span> <span class="n">subplot1</span><span class="p">)</span>  
         <span class="n">plotBestGuessSimple</span><span class="p">(</span><span class="n">arrFull</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;Full Tree&quot;</span><span class="p">,</span> <span class="n">subplot2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Epsilon&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Probability that an attack points to the correct leaf.&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
@@ -16276,7 +16220,7 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
 
 
 <div class="jp-RenderedImage jp-OutputArea-output ">
-<img src="data:image/png;base64,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"
+<img src="data:image/png;base64,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t60Tc/zxx7d+/uWXX95afumll3Lqqafy4osv8swzz/ChD30IgEsuuYTZs2f3WGxmtvNmTJ5A9cCq7cqqB1YxY/KEHvuMPBPEEmC8pLGSdgXOIlmSsdBC4Lz0/XSSZRyDpFnpEwCS9gA+AryYY6y5dfjcc889TJmSdL1UVVWxzz777HSsWe6WPv3pTyMJSRxzzDE0NDR0WH/jxo08/vjjXHDBBQDsuuuuDB06FIADDjiA9evX8/rrr+907GbWM6YeMZKrph3GyKHVCBg5tJqrph3G1CPatuR3X27jICJis6SLgUVAFTAnIlZJuhKojYiFwB3AXEn1wBskSQSSp5/ulLQKEHBnRDybV6zQcYdPd//B33vvPVavXt3aJDR69Gjmz5/f4TF1dXWceeaZRfc99thjDB06lCVLlmSOobm5mblz53LjjTe2lj355JMcfvjhjBgxguuuu45DDjmE3/72twwfPpzzzz+fZ555hqOOOoobb7yRPfbYA4AjjzySJ554gs9//vOZP9vM8jX1iJE9mhDaynWgXEQ8TLJwfGHZ5QXvN5E80tr2uHeKlecpjw6fdevWtf4VntWECRNYsWJFtz+zra9+9auccMIJHH/88UDyRf/KK68wePBgHn74YaZOncpLL73E5s2bWbZsGTfddBPHHnssl156KbNnz+a73/0uAO9///tZs2ZNj8VlZuWvXDupe10eHT7V1dVdHkRWV1fX2oHc9rVhw4YuneuKK65g7dq1XH/99a1lQ4YMYfDgwUDSDNXc3My6desYNWoUo0aN4thjjwVg+vTpLFu2rPW4TZs2UV3dc51fZlb+Knqqja6YMXkCl81fuV0z0852+Oy9995s2bKFTZs2MWjQoEzHdPUO4uSTT+buu+9m5MjtbzNvv/12Fi1axKOPPsouu2z7O+D1119n3333RRJPP/00W7dubR1tPnr0aOrq6pgwYQKPPvooEyduG9f461//mtNP79WbOjMrMSeIVEs73rWL6lizoYkRQ6uZMXnCTrfvfepTn+JXv/oVp5xySk+EuZ2tW7dSX19ftOP7oosu4oADDuCjH/0oANOmTePyyy/nwQcf5NZbb2XAgAFUV1czb9681tHQN910E+eeey7vvfceBx54IHfeeSeQ9GPU19dTU5P7g2RmVkaUPDTU99XU1ETbFeVeeOGF1kc1S2XZsmXccMMN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"
 >
 </div>
 
@@ -16291,7 +16235,7 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
 
 
 <div class="jp-RenderedImage jp-OutputArea-output ">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXoAAAEICAYAAABRSj9aAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjMuMywgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy/Il7ecAAAACXBIWXMAAAsTAAALEwEAmpwYAAAaP0lEQVR4nO3dcZRcZZ3m8e9jJzG9REiAFk06JAEzLRHXBGvCehgQR6QDHkkGwhAGjyjuZlmJhzlqjjDjosaZnYxxUJbDqCyiwsBGBjPZHMXTwwJZRxc1FdKQSaCljWi6A9IEWlenQ7o7v/2jb4fqtpquTqpSVW8/n3P6pO5731v1u6mTpyvv+9a9igjMzCxdr6l2AWZmVlkOejOzxDnozcwS56A3M0ucg97MLHEOejOzxDnobdKTNF9SSJqSbW+V9B+rXZdZuTjoLSmSnpHUJ+m3BT+zy/TcXyl4zoOS+gu2v1eO1zCrBAe9peh9ETGj4GdfOZ40Iq4dfk7gvwHfKniNi4b7Df/PwKxWOOhtUsg+6V9QsP0ZSf9Q5uf/pKQngN9JmiLpP0j6v5J6JT0u6fyC/idI+pqkZyV1S/orSQ3lqseskIPerHyuBN4LzAROAb4L/BVwIvAJ4NuSmrK+3wAGgDcBS4ALAc8LWEU46C1Fm7NP0b2SNh/D1/3vEbE3IvqA9wMPRMQDEXEoIh4E8sDFkk4BLgb+PCJ+FxHPA18EVh3DWm0S8ViipWhFRPzvKrzu3oLH84DLJb2voG0q8Ei2byrwrKThfa8ZdbxZ2TjobbL4HfDvCrbfUIHXKLwU7F7g7oj4T6M7SXoj8DJwckQMVKAOsxE8dGOTRTuwStJUSTlgZYVf7x+A90lqldQgabqk8yU1R8SzwD8DfyfpeEmvkXS6pHdWuCabpBz0Nln8V+B04CXgs8C9lXyxiNgLLAf+Auhh6BP+Wl75N/cBYBqwO6vpfuCNlazJJi/5xiNmZmnzJ3ozs8Q56M3MEuegNzNLnIPezCxxNbeO/uSTT4758+dXuwwzs7qyffv2FyKiqdi+mgv6+fPnk8/nq12GmVldkfSLsfZ56MbMLHEOejOzxDnozcwSV3Nj9MX09/fT1dXFgQMHql1KsqZPn05zczNTp06tdilmVmZ1EfRdXV287nWvY/78+RRc1tXKJCLYv38/XV1dLFiwoNrlmFmZ1UXQHzhwwCFfQZI46aST6OnpqXYpZpPS5h3dbGjrYF9vH7NnNrK2tYUVS+aU7fnrIugBh3yF+e/XrDo27+jmxk076esfBKC7t48bN+0EKFvYezLWzKyKNrR1HA75YX39g2xo6yjbazjozcyqaF9v34Taj4SDvkR9fX28853vZHBwkGeeeYbzzz+ftrY2Fi9ezOLFi5kxYwYtLS0sXryYD3zgAyU9ZymXerjqqqtoaWnhzDPP5JprrqG/vx+ArVu3csIJJxx+/XXr1h0+pre3l5UrV/LmN7+ZM844g0cffRSAT3ziEzz88MMTP3kzq5jZMxsn1H4kkgz6zTu6OWf9wyy44bucs/5hNu/oPurnvPPOO7n00ktpaGg43Nba2kp7ezvt7e3kcjnuuece2tvbueuuu4769YZdddVVPPXUU+zcuZO+vj7uuOOOw/vOPffcw69/0003HW6//vrrWbZsGU899RSPP/44Z5xxBgAf/ehHWb9+fdlqM7Ojt7a1hcapDSPaGqc2sLa1pWyvUTeTsaWq1MTGPffcw733Dt19rqGhgRNPPPGoa21qKnr9oREuvvjiw4+XLl1KV1fXq/b/9a9/zfe//32+8Y1vADBt2jSmTZsGwLx589i/fz/PPfccb3hDJe6NbWYTNZxLXnUzAa82sXGkf3EHDx5kz549h4da5s6dy6ZNm171mI6ODq644oqi+7Zu3crMmTPZtm1byTX09/dz9913c8sttxxue/TRR3nb297G7Nmz+cIXvsBb3vIWfv7zn9PU1MSHPvQhHn/8cd7+9rdzyy23cNxxxwFw1lln8cMf/pDLLrus5Nc2s8pasWROWYN9tOSCvhITGy+88AIzZ86c0DEtLS20t7cf8WuO9pGPfITzzjuPc889FxgK7F/84hfMmDGDBx54gBUrVvD0008zMDDAY489xq233srZZ5/N9ddfz/r16/nc5z4HwOtf/3r27dtXtrrMrPaVNEYvaZmkDkmdkm4osv9aSTsltUv6gaRFWft8SX1Ze7ukr5T7BEarxMRGY2PjhC+/0NHRcXiidPRPb2/vhJ7rs5/9LD09Pdx8882H244//nhmzJgBDA3v9Pf388ILL9Dc3ExzczNnn302ACtXruSxxx47fNyBAwdobCzfJI+Z1b5xP9FLagBuA94DdAHbJG2JiN0F3e6NiK9k/S8BbgaWZft+FhGLy1r1q1jb2jJijB6OfmJj1qxZDA4OcuDAAaZPn17SMRP9RP/ud7+bu+66izlzRv737Y477qCtrY2HHnqI17zmld/Lzz33HKeccgqS+MlPfsKhQ4c46aSTkMTcuXPp6OigpaWFhx56iEWLFh0+7qc//SmXX355yXWZWf0rZehmKdAZEXsAJG0ElgOHgz4iflPQ/zggylnkRFRqYuPCCy/kBz/4ARdccEE5yhzh0KFDdHZ2Fp3gvfbaa5k3bx7veMc7ALj00ku56aabuP/++/nyl7/MlClTaGxsZOPGjYe/3Xrrrbdy1VVXcfDgQU477TS+/vWvA0Pj/J2dneRyubKfg5nVrlKCfg6wt2C7Czh7dCdJ1wEfA6YBf1ywa4GkHcBvgE9FxL8UOXY1sBrg1FNPLbn4sVRiYuO6667ji1/84phBv3Xr1iN+7t27d3PZZZcVHVIZGBgoesyaNWtYs2ZN0X2LFy8uepeu73znO6xcuZIpU5KbmjGzV1G2dfQRcVtEnA58EvhU1vwscGpELGHol8C9ko4vcuztEZGLiFwpSw6r4ayzzuJd73oXg4OD43eeoDPPPHPE+HulDAwM8PGPf7zir2NmtaWUoO8G5hZsN2dtY9kIrACIiJcjYn/2eDvwM+APjqTQiKqNBh12zTXXjPjCVL25/PLLx1w9VAt/v2ZWGaUE/TZgoaQFkqYBq4AthR0kLSzYfC/wdNbelE3mIuk0YCGwZ6JFTp8+nf379zuMKmT4evSlTjSbWX0Zd7A2IgYkrQHagAbgzojYJWkdkI+ILcAaSRcA/cBLwNXZ4ecB6yT1A4eAayPixYkW2dzcTFdXl6+XXkHDd5gys/So1j4l53K5KDaRaGZmY5O0PSKKLqlL8qJmZmb2Cge9mVniHPRmZolz0JuZJc5Bb2aWOAe9mVniHPRmZolz0JuZJc5Bb2aWOAe9mVniHPRmZolz0JuZJc5Bb2aWOAe9mVniHPRmZolz0JuZJc5Bb2aWOAe9mVniSgp6ScskdUjqlHRDkf3XStopqV3SDyQtKth3Y3Zch6TWchZvZmbjGzfoJTUAtwEXAYuAKwuDPHNvRLw1IhYDnwduzo5dBKwC3gIsA/4+ez4zMztGSvlEvxTojIg9EXEQ2AgsL+wQEb8p2DwOGL7j+HJgY0S8HBE/Bzqz5zMzs2NkSgl95gB7C7a7gLNHd5J0HfAxYBrwxwXH/mjUsXOKHLsaWA1w6qmnllK3mZmVqGyTsRFxW0ScDnwS+NQEj709InIRkWtqaipXSWZmRmlB3w3MLdhuztrGshFYcYTHmplZmZUS9NuAhZIWSJrG0OTqlsIOkhYWbL4XeDp7vAVYJem1khYAC4GfHH3ZZmZWqnHH6CNiQNIaoA1oAO6MiF2S1gH5iNgCrJF0AdAPvARcnR27S9J9wG5gALguIgYrdC5mZlaEImL8XsdQLpeLfD5f7TLMzOqKpO0RkSu2z9+MNTNLnIPezCxxDnozs8Q56M3MEuegNzNLnIPezCxxDnozs8Q56M3MEuegNzNLnIPezCxxDnozs8Q56M3MEuegNzNLnIPezCxxDnozs8Q56M3MEuegNzNLnIPezCxxJQW9pGWSOiR1SrqhyP6PSdot6QlJD0maV7BvUFJ79rNl9LFmZlZZ494cXFIDcBvwHqAL2CZpS0TsLui2A8hFxL9J+i/A54Ersn19EbG4vGWbmVmpxg16YCnQGRF7ACRtBJYDh4M+Ih4p6P8j4P3lLNLMrBI27+hmQ1sH+3r7mD2zkbWtLaxYMqfaZZVdKUM3c4C9BdtdWdtYPgx8r2B7uqS8pB9JWlHsAEmrsz75np6eEkoyMzs6m3d0c+OmnXT39hFAd28fN27ayeYd3dUurezKOhkr6f1ADthQ0DwvInLAnwFfknT66OMi4vaIyEVErqmpqZwlmZkVtaGtg77+wRFtff2DbGjrqFJFlVNK0HcDcwu2m7O2ESRdAPwlcElEvDzcHhHd2Z97gK3AkqOo18ysLPb19k2ovZ6VEvTbgIWSFkiaBqwCRqyekbQE+CpDIf98QfssSa/NHp8MnEPB2L6ZWbXMntk4ofZ6Nm7QR8QAsAZoA54E7ouIXZLWSbok67YBmAH846hllGcAeUmPA48A60et1jEzq4q1rS00Tm0Y0dY4tYG1rS1VqqhyFBHVrmGEXC4X+Xy+2mWY2SSQ0qobSduz+dDfU8rySjOzJK1YMqdug30ifAkEM7PEOejNzBLnoDczS5yD3swscQ56M7PEOejNzBLnoDczS5yD3swscQ56M7PEOejNzBLnoDczS5yD3swscQ56M7PEOejNzBLnoDczS5yD3swscQ56M7PElRT0kpZJ6pDUKemGIvs/Jmm3pCckPSRpXsG+qyU9nf1cXc7izcxsfOMGvaQG4DbgImARcKWkRaO67QByEfHvgfuBz2fHngh8GjgbWAp8WtKs8pVvZmbjKeUT/VKgMyL2RMRBYCOwvLBDRDwSEf+Wbf4IaM4etwIPRsSLEfES8CCwrDylm5lZKUoJ+jnA3oLtrqxtLB8GvjeRYyWtlpSXlO/p6SmhJDMzK1VZJ2MlvR/IARsmclxE3B4RuYjINTU1lbMkM7NJr5Sg7wbmFmw3Z20jSLoA+Evgkoh4eSLHmplZ5ZQS9NuAhZIWSJoGrAK2FHaQtAT4KkMh/3zBrjbgQkmzsknYC7M2MzM7RqaM1yEiBiStYSigG4A7I2KXpHVAPiK2MDRUMwP4R0kAv4yISyLiRUmfY+iXBcC6iHixImdiZmZFKSKqXcMIuVwu8vl8tcswM6srkrZHRK7YPn8z1swscQ56M7PEOejNzBLnoDczS5yD3swscQ56M7PEOejNzBLnoDczS5yD3swscQ56M7PEOejNzBLnoDczS5yD3swscQ56M7PEOejNzBLnoDczS5yD3swscQ56M7PElRT0kpZJ6pDUKemGIvvPk/SYpAFJK0ftG5TUnv1sGX2smZlV1rg3B5fUANwGvAfoArZJ2hIRuwu6/RL4IPCJIk/RFxGLj75UMzM7EuMGPbAU6IyIPQCSNgLLgcNBHxHPZPsOVaBGM0vM5h3dbGjrYF9vH7NnNrK2tYUVS+ZUu6xklTJ0MwfYW7DdlbWVarqkvKQfSVpRrIOk1VmffE9PzwSe2szqzeYd3dy4aSfdvX0E0N3bx42bdrJ5R3e1S0vWsZiMnRcROeDPgC9JOn10h4i4PSJyEZFramo6BiWZWbVsaOugr39wRFtf/yAb2jqqVFH6Sgn6bmBuwXZz1laSiOjO/twDbAWWTKA+M0vMvt6+CbXb0Ssl6LcBCyUtkDQNWAWUtHpG0ixJr80enwycQ8HYvplNPrNnNk6o3Y7euEEfEQPAGqANeBK4LyJ2SVon6RIASX8oqQu4HPiqpF3Z4WcAeUmPA48A60et1jGzSWZtawuNUxtGtDVObWBta0uVKkqfIqLaNYyQy+Uin89XuwwzqyCvuik/Sduz+dDfU8rySjNLSC2E7Iolcxzsx5CD3mwSGV7aOLzqZXhpI+DgTZivdWM2iXhp4+TkoDebRLy0cXJy0JtNIl7aODk56M0mES9tnJw8GWs2iQxPuFZ71Y0dWw56s0nGSxsnHw/dmJklzkFvZpY4B72ZWeIc9GZmiXPQm5klzkFvZpY4B72ZWeIc9GZmiXPQm5klzkFvZpa4koJe0jJJHZI6Jd1QZP95kh6TNCBp5ah9V0t6Ovu5ulyFm5lZacYNekkNwG3ARcAi4EpJi0Z1+yXwQeDeUceeCHwaOBtYCnxa0qyjL9vMzEpVyif6pUBnROyJiIPARmB5YYeIeCYingAOjTq2FXgwIl6MiJeAB4FlZajbzMxKVErQzwH2Fmx3ZW2lKOlYSasl5SXle3p6SnxqMzMrRU1MxkbE7RGRi4hcU1NTtcsxM0tKKUHfDcwt2G7O2kpxNMeamVkZlBL024CFkhZImgasAraU+PxtwIWSZmWTsBdmbWZmdoyMG/QRMQCsYSignwTui4hdktZJugRA0h9K6gIuB74qaVd27IvA5xj6ZbENWJe1mZnZMaKIqHYNI+Ryucjn89Uuw8ysrkjaHhG5YvtqYjLWzMwqx0FvZpa4KdUuwGyy2Lyjmw1tHezr7WP2zEbWtrawYkmpX0kxO3IOerNjYPOObm7ctJO+/kEAunv7uHHTTgCHvVWch27MjoENbR2HQ35YX/8gG9o6qlSRTSYOerNjYF9v34TazcrJQW92DMye2TihdrNyctCbHQNrW1tonNowoq1xagNrW1uqVJFNJp6MNTsGhidcverGqsFBb8mrlWWNK5bMcbBbVTjoLWle1mjmMXpLnJc1mjnoLXFe1mjmoLfEeVmjmYPeEudljWaejLXEeVmjmYPeJgEva7TJzkM3ZmaJKynoJS2T1CGpU9INRfa/VtK3sv0/ljQ/a58vqU9Se/bzlTLXb2Zm4xh36EZSA3Ab8B6gC9gmaUtE7C7o9mHgpYh4k6RVwN8CV2T7fhYRi8tbtpmZlaqUT/RLgc6I2BMRB4GNwPJRfZYD38we3w+8W5LKV6aZmR2pUoJ+DrC3YLsrayvaJyIGgF8DJ2X7FkjaIen/SDq32AtIWi0pLynf09MzoRMwM7NXV+nJ2GeBUyNiCfAx4F5Jx4/uFBG3R0QuInJNTU0VLsnMbHIpZXllNzC3YLs5ayvWp0vSFOAEYH9EBPAyQERsl/Qz4A+A/NEWbrWvVq4aaTbZlfKJfhuwUNICSdOAVcCWUX22AFdnj1cCD0dESGrKJnORdBqwENhTntKtlg1fNbK7t4/glatGbt4x+jOCmVXauEGfjbmvAdqAJ4H7ImKXpHWSLsm6fQ04SVInQ0M0w0swzwOekNTO0CTttRHxYpnPwWqQrxppVjtK+mZsRDwAPDCq7aaCxweAy4sc923g20dZo9UhXzXSrHb4m7FWEb5qpFntcNBbRfiqkWa1wxc1s4rwVSPNaoeD3irGV400qw0O+gR5/bqZFXLQJ2Z4/frw0sbh9euAw95skvJkbGK8ft3MRnPQJ8br181sNAd9Yrx+3cxGc9CX0eYd3Zyz/mEW3PBdzln/cFWu6+L162Y2midjy6RWJkG9ft3MRnPQl8mrTYIe65D1+nUzK+ShmzLxJKiZ1SoHfZl4EtTMapWDvkw8CWpmtcpj9GXiSVAzq1UO+jLyJKiZ1SIP3ZiZJa6koJe0TFKHpE5JNxTZ/1pJ38r2/1jS/IJ9N2btHZJay1j7CLXwZSUzs1o0btBLagBuAy4CFgFXSlo0qtuHgZci4k3AF4G/zY5dBKwC3gIsA/4+e76yGv6yUndvH8ErX1Zy2JuZlfaJfinQGRF7IuIgsBFYPqrPcuCb2eP7gXdLUta+MSJejoifA53Z85WVr9hoZja2UoJ+DrC3YLsrayvaJyIGgF8DJ5V4LJJWS8pLyvf09JRefcZfVjIzG1tNTMZGxO0RkYuIXFNT04SP95eVzMzGVkrQdwNzC7abs7aifSRNAU4A9pd47FHzl5XMzMZWStBvAxZKWiBpGkOTq1tG9dkCXJ09Xgk8HBGRta/KVuUsABYCPylP6a9YsWQOf3PpW5kzsxEBc2Y28jeXvtVr2s3MKOELUxExIGkN0AY0AHdGxC5J64B8RGwBvgbcLakTeJGhXwZk/e4DdgMDwHURMVj0hY6Sv6xkZlachj54145cLhf5fL7aZZiZ1RVJ2yMiV2xfTUzGmplZ5TjozcwS56A3M0ucg97MLHE1NxkrqQf4xREefjLwQhnLqTU+v/qX+jn6/KpnXkQU/cZpzQX90ZCUH2vWOQU+v/qX+jn6/GqTh27MzBLnoDczS1xqQX97tQuoMJ9f/Uv9HH1+NSipMXozM/t9qX2iNzOzURz0ZmaJSyLox7t5eQokPSNpp6R2SXV/1TdJd0p6XtK/FrSdKOlBSU9nf86qZo1HY4zz+4yk7uw9bJd0cTVrPBqS5kp6RNJuSbskXZ+1p/QejnWOdfc+1v0YfXaz8Z8C72HoVoXbgCsjYndVCyszSc8AuYio1S9rTIik84DfAndFxJlZ2+eBFyNiffYLe1ZEfLKadR6pMc7vM8BvI+IL1aytHCS9EXhjRDwm6XXAdmAF8EHSeQ/HOsc/pc7exxQ+0Zdy83KrMRHxfYbuXVCo8Cbz32ToH1VdGuP8khERz0bEY9nj/wc8ydD9oFN6D8c6x7qTQtCXdAPyBATwz5K2S1pd7WIq5JSIeDZ7/BxwSjWLqZA1kp7IhnbqdlijkKT5wBLgxyT6Ho46R6iz9zGFoJ8s/igizgIuAq7LhgaSld2Ksr7HFX/fl4HTgcXAs8DfVbWaMpA0A/g28OcR8ZvCfam8h0XOse7exxSC/pjcgLzaIqI7+/N54J8YGrJKza+ycdHh8dHnq1xPWUXEryJiMCIOAf+DOn8PJU1lKADviYhNWXNS72Gxc6zH9zGFoC/l5uV1TdJx2WQQko4DLgT+9dWPqkuFN5m/GvhfVayl7IYDMPMn1PF7KEkM3Sv6yYi4uWBXMu/hWOdYj+9j3a+6AciWN32JV25e/tfVrai8JJ3G0Kd4GLqh+731fo6S/idwPkOXff0V8GlgM3AfcCpDl6r+04ioywnNMc7vfIb+ux/AM8B/LhjPriuS/gj4F2AncChr/guGxrBTeQ/HOscrqbP3MYmgNzOzsaUwdGNmZq/CQW9mljgHvZlZ4hz0ZmaJc9CbmSXOQW9mljgHvZlZ4v4/HzFMozj5nyIAAAAASUVORK5CYII="
+<img src="data:image/png;base64,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"
 >
 </div>
 
@@ -16306,6 +16250,42 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h1 id="LEGACY-CODE">LEGACY CODE<a class="anchor-link" href="#LEGACY-CODE">&#182;</a></h1>
 </div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># def dataFetch(rows):</span>
+<span class="c1">#     conn = pg.connect(db)</span>
+<span class="c1">#     cur = conn.cursor()</span>
+<span class="c1">#     sql = &quot;&quot;&quot;</span>
+<span class="c1">#     select concat(TO_CHAR(jan_day, &#39;fm00&#39;),TO_CHAR(day_hour , &#39;fm00&#39;),TO_CHAR(hour_min , &#39;fm00&#39;))::integer as min, count(*) </span>
+<span class="c1">#     from taxi_pickup_201601</span>
+<span class="c1">#     group by min  -- 44062 rows</span>
+<span class="c1">#     limit {}</span>
+<span class="c1">#     &quot;&quot;&quot;.format(str(rows))</span>
+<span class="c1">#     try:</span>
+<span class="c1">#         cur.execute(sql)</span>
+<span class="c1">#         data = cur.fetchall()</span>
+<span class="c1">#         timestampData= []</span>
+<span class="c1">#         for i in data:</span>
+<span class="c1">#             timeTuple=(i[0],i[1])</span>
+<span class="c1">#             timestampData.append(timeTuple)</span>
+<span class="c1">#         cur.close()</span>
+<span class="c1">#         return timestampData</span>
+
+<span class="c1">#     except (Exception, pg.Error) as error:</span>
+<span class="c1">#         print(&quot;Error while fetching pick up counts&quot;, error)</span>
+<span class="c1">#         cur.close()</span>
+<span class="c1">#         return -1</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
@@ -16384,6 +16364,96 @@ Full [1.16420892e-07 1.16420892e-07 3.41146814e-04 9.99658620e-01]
 <span class="c1"># highEpsS = 5</span>
 <span class="c1"># QueryErrorTesting(k, lowEpsS)</span>
 <span class="c1"># QueryErrorTesting(k, highEpsS)</span>
+
+
+<span class="c1"># ##########LEGACY#########</span>
+<span class="c1"># def TestLeavesOnly (loopSize, maxT): </span>
+<span class="c1">#     bestGuess = 0 </span>
+<span class="c1">#     #maxTreeSize = 2*maxT</span>
+<span class="c1">#     tSizeArrLow = []</span>
+<span class="c1">#     tSizeArrHigh = []</span>
+<span class="c1">#     for i in range(maxT):</span>
+<span class="c1">#         epsArrLow = []</span>
+<span class="c1">#         epsArrHigh = []</span>
+<span class="c1">#         T = 2**i</span>
+<span class="c1">#         eps = 0.1</span>
+<span class="c1">#         prGuessCorrect = 0</span>
+<span class="c1">#         while (prGuessCorrect &lt; 0.60 and eps &lt; 150): </span>
+<span class="c1">#             correctGuesses = 0 </span>
+<span class="c1">#             for i in range(loopSize): </span>
+<span class="c1">#                 posteriors, posteriorsFull = prepAttackLeaves(T, eps)</span>
+<span class="c1">#                 posteriorsT = np.flip(posteriors)</span>
+                
+<span class="c1">#                 #LEAVES ONLY</span>
+<span class="c1">#                 winner = np.argwhere(posteriorsT == np.amax(posteriorsT))</span>
+<span class="c1">#                 pick = rn.choice(winner)</span>
+<span class="c1">#                 if (pick == 0):</span>
+<span class="c1">#                     correctGuesses = correctGuesses + 1</span>
+<span class="c1">#             prGuessCorrect = correctGuesses/loopSize</span>
+<span class="c1">#             if eps &lt; 1:</span>
+<span class="c1">#                 epsArrLow.append((eps, prGuessCorrect))</span>
+<span class="c1">#                 eps = np.round(eps+0.1, 5)</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 epsArrHigh.append((eps, prGuessCorrect))</span>
+<span class="c1">#                 eps = np.round(eps*1.2, 5)</span>
+                
+<span class="c1">#         tSizeArrLow.append(epsArrLow)</span>
+<span class="c1">#         tSizeArrHigh.append(epsArrHigh)</span>
+        
+<span class="c1">#     tSizeArrLow = [x for x in tSizeArrLow if x]</span>
+<span class="c1">#     tSizeArrHigh = [x for x in tSizeArrHigh if x]</span>
+<span class="c1">#     return  tSizeArrLow, tSizeArrHigh</span>
+
+<span class="c1"># def TestFullTree(loopSize, maxTreeSize): </span>
+<span class="c1">#     bestGuess = 0 </span>
+<span class="c1">#     tSizeArrLow = []</span>
+<span class="c1">#     tSizeArrHigh = []</span>
+<span class="c1">#     for i in range(0, maxTreeSize):</span>
+<span class="c1">#         epsArrLow = []</span>
+<span class="c1">#         epsArrHigh = []</span>
+<span class="c1">#         T = 2**i</span>
+<span class="c1">#         print(&quot;Prior: &quot;, 1/T)</span>
+<span class="c1">#         eps = 0.1</span>
+<span class="c1">#         prGuessCorrect = 0</span>
+<span class="c1">#         while (prGuessCorrect &lt; 0.90 and eps &lt; 150): </span>
+<span class="c1">#             correctGuesses = 0 </span>
+<span class="c1">#             for i in range(loopSize): </span>
+<span class="c1">#                 posteriors, posteriorsFull = prepAttackFull(T, eps)</span>
+<span class="c1">#                 posteriorsT = np.flip(posteriorsFull)</span>
+<span class="c1">#                 winner = np.argwhere(posteriorsT == np.amax(posteriorsT))</span>
+<span class="c1">#                 np.array(winner).flatten() </span>
+<span class="c1">#                 if winner.size != 0:</span>
+<span class="c1">#                     pick = rn.choice(winner)</span>
+<span class="c1">#                     if (pick == 0):</span>
+<span class="c1">#                         correctGuesses = correctGuesses + 1</span>
+
+<span class="c1">#             prGuessCorrect = correctGuesses/loopSize</span>
+<span class="c1">#             print(&quot;t: &quot;, T, &quot;eps &quot;, eps, &quot;PrBestGuess &quot;, prGuessCorrect)</span>
+
+<span class="c1">#             if eps &lt; 5:</span>
+<span class="c1">#                 epsArrLow.append((eps, prGuessCorrect))</span>
+<span class="c1">#                 eps = np.round(eps*2, 2)</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 epsArrHigh.append((eps, prGuessCorrect))</span>
+<span class="c1">#                 eps = np.round(eps*2, 2)</span>
+
+<span class="c1">#         tSizeArrLow.append(epsArrLow)</span>
+<span class="c1">#         tSizeArrHigh.append(epsArrHigh)</span>
+<span class="c1">#     tSizeArrLow = [x for x in tSizeArrLow if x]</span>
+<span class="c1">#     tSizeArrHigh = [x for x in tSizeArrHigh if x]</span>
+<span class="c1">#     return tSizeArrLow, tSizeArrHigh</span>
+
+<span class="c1"># def plotBestGuess(arr):</span>
+<span class="c1">#     for i in range(0,len(arr)):</span>
+<span class="c1">#         TArr = arr[i] </span>
+<span class="c1">#         eps, prop = (zip(*TArr))</span>
+<span class="c1">#         plt.scatter(eps, prop, label=(&#39;T=&#39;+str(2**i)))</span>
+<span class="c1">#         plt.xlabel(&#39;Epsilon-Value&#39;)</span>
+<span class="c1">#         plt.ylabel(&#39;Average Max Probability&#39;)</span>
+<span class="c1">#         plt.legend()</span>
+<span class="c1">#     plt.show()</span>
+<span class="c1">#     return 1</span>
+<span class="c1"># ##############################</span>
 </pre></div>
 
      </div>
